@@ -4,7 +4,10 @@ async function Send(prompt, code) { // Uses backend /api/tts (Google Cloud TTS)
     try {
         const res = await fetch('/api/tts', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'x-google-api-key': API_Key // authorize backend to use Google API key
+            },
             body: JSON.stringify({
                 text: String(prompt),
                 voiceName: 'pl-PL-Wavenet-D', // męski, niski
