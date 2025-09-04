@@ -1,22 +1,39 @@
-﻿var BardAPIKey = API_Key; //Follow Quickstart guide for API key
+var GEMINI_API_KEY = API_Key; // Provide your Google AI Studio API Key
 
-function Send(prompt,code) {//Send Prompt to Bard API
-    $.getJSON('https://blackearthauction.com/Bard/code?req=' + prompt + '&token=' + BardAPIKey, function (data) {
-        var s = data.response;
-       var highlight = Prism.highlight(s, Prism.languages.javascript, "javascript"); //Highlight Code Syntax
+async function Send(prompt, code) { // Generate code via Gemini API
+    try {
+        const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY);
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [
+                    { role: 'user', parts: [{ text: String(prompt) }]}
+                ]
+            })
+        });
+        if (!res.ok) throw new Error('Gemini API error: ' + res.status + ' ' + res.statusText);
+        const data = await res.json();
+        let s = (data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) || '';
+        // Try to extract code if wrapped in triple backticks
+        const m = s.match(/```[a-zA-Z0-9_-]*\n([\s\S]*?)```/);
+        if (m && m[1]) s = m[1];
+        var highlight = Prism.highlight(s, Prism.languages.javascript, "javascript"); //Highlight Code Syntax
         $('#cod').html(highlight); //Add Code to page
         $('#Ask').html("Generate  <i class='far fa-paper-plane'></i>");
         $('#Ask').prop('disabled', false);
-        //Save in hidden to export CSV
-         let cssv = s.replace(/(\r\n|\n|\r)/gm, " ");
-          let hddnn = $('#hdn_csv').val(); //Save chat in hidden file to be downloaded as CSV file when required
-           $('#hdn_csv').val(s);
-    });
+        $('#hdn_csv').val(s);
+    } catch (err) {
+        console.error(err);
+        $('#cod').text('Error: ' + (err && err.message ? err.message : 'Unexpected error'));
+        $('#Ask').html("Generate  <i class='far fa-paper-plane'></i>");
+        $('#Ask').prop('disabled', false);
+    }
 }
 
   $(function () {
   $('#export').click(function(){//Export Chat in CSV format
-  downloadCSV("bardExport.csv",$('#hdn_csv').val());
+  downloadCSV("geminiExport.csv",$('#hdn_csv').val());
   });
   })
     function downloadCSV(filename, content) {
@@ -115,3 +132,4 @@ function copyText(){
   //The removeChild() method of the Node interface removes a child node from the DOM and returns the removed node
   document.body.removeChild(element);
 };
+

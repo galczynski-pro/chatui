@@ -1,18 +1,18 @@
-﻿var BardAPIKey = API_Key; //Follow Quickstart guide for API key
+var GEMINI_API_KEY = API_Key; // Not used here; kept for consistency
 
-function Send(prompt,code) {//Send Prompt to Bard API
-    $.getJSON('https://blackearthauction.com/Bard/audio?req=' + prompt + '&token=' + BardAPIKey, function (data) {
-        var s = data.response;
-        $("#down").attr("href", "https://blackearthauction.com/" + s); //Link to generated MP3 file
+function Send(prompt, code) { // Client-side Text-to-Speech using Web Speech API
+    try {
+        if (!('speechSynthesis' in window)) {
+            alert('Speech Synthesis not supported in this browser.');
+        } else {
+            const utter = new SpeechSynthesisUtterance(String(prompt));
+            utter.lang = 'en-US';
+            window.speechSynthesis.speak(utter);
+        }
+    } finally {
         $('#Ask').html("Generate  <i class='far fa-paper-plane'></i>");
         $('#Ask').prop('disabled', false);
-        $('#down').show();
-
-        //Save in hidden to export CSV
-         let cssv = s.replace(/(\r\n|\n|\r)/gm, " ");
-          let hddnn = $('#hdn_csv').val(); //Save chat in hidden file to be downloaded as CSV file when required
-           $('#hdn_csv').val(s);
-    });
+        $('#down').hide(); // No server-side MP3; hide download
+    }
 }
-
 

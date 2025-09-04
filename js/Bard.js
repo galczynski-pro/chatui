@@ -1,31 +1,53 @@
-﻿var BardAPIKey = API_Key; //Follow Quickstart guide for API key
+var GEMINI_API_KEY = API_Key; // Supply your Google AI Studio API key
 
-function Send(prompt) {//Send Prompt to Bard API
-    $.getJSON('https://blackearthauction.com/Bard/api?req=' + prompt + '&token=' + BardAPIKey, function (data) {
-        var s = data.response;
-        $('#mssg').append("<div class='direct-chat-msg'><div class='direct-chat-infos clearfix'><span class='direct-chat-name float-left'>Synthia</span><span class='direct-chat-timestamp float-right'><a href='#' vall='"+s+"' class='text-primary play'><i class='fas fa-play-circle'></i></a></span></div><img class='direct-chat-img' src='img/neo.jpg' alt='Message User Image'><div class='direct-chat-text'>" + s + "</div> </div>");
+async function Send(prompt) { // Send prompt to Google Gemini API
+    try {
+        const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY);
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [
+                    { role: 'user', parts: [{ text: String(prompt) }]} 
+                ]
+            })
+        });
+
+        if (!res.ok) {
+            throw new Error('Gemini API error: ' + res.status + ' ' + res.statusText);
+        }
+
+        const data = await res.json();
+        const s = (data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) || 'No response';
+
+        $('#mssg').append("<div class='direct-chat-msg'><div class='direct-chat-infos clearfix'><span class='direct-chat-name float-left'>Synthia</span><span class='direct-chat-timestamp float-right'><a href='#' vall='" + s.replace(/'/g, "&#39;") + "' class='text-primary play'><i class='fas fa-play-circle'></i></a></span></div><img class='direct-chat-img' src='img/neo.jpg' alt='Message User Image'><div class='direct-chat-text'>" + s + "</div> </div>");
         $('#Ask').html("Ask");
         $('#Ask').prop('disabled', false);
-        //Scroll to the answer
-           $('#mssg').stop().animate({
-        scrollTop: $('#mssg')[0].scrollHeight
-    }, 800);
-        //Save in hidden to export CSV
-         let cssv = s.replace(/(\r\n|\n|\r)/gm, " ");
-          let hddnn = $('#hdn_csv').val(); //Save chat in hidden file to be downloaded as CSV file when required
-           $('#hdn_csv').val(hddnn + '\r\nYou: '+prompt+'\r\n Bard: ' + cssv);
-    });
+        // Scroll to the answer
+        $('#mssg').stop().animate({ scrollTop: $('#mssg')[0].scrollHeight }, 800);
+        // Save in hidden to export CSV
+        let cssv = s.replace(/(\r\n|\n|\r)/gm, ' ');
+        let hddnn = $('#hdn_csv').val();
+        $('#hdn_csv').val((hddnn || '') + '\r\nYou: ' + prompt + '\r\n Gemini: ' + cssv);
+    } catch (err) {
+        console.error(err);
+        const s = 'Error: ' + (err && err.message ? err.message : 'Unexpected error');
+        $('#mssg').append("<div class='direct-chat-msg'><div class='direct-chat-infos clearfix'><span class='direct-chat-name float-left'>Synthia</span></div><img class='direct-chat-img' src='img/neo.jpg' alt='Message User Image'><div class='direct-chat-text text-danger'>" + s + "</div> </div>");
+        $('#Ask').html("Ask");
+        $('#Ask').prop('disabled', false);
+        $('#mssg').stop().animate({ scrollTop: $('#mssg')[0].scrollHeight }, 800);
+    }
 }
 
   $(function () {
   $('#export').click(function(){//Export Chat in CSV format
-  downloadCSV("bardExport.csv",$('#hdn_csv').val());
+  downloadCSV("geminiExport.csv",$('#hdn_csv').val());
   });
   })
         function downloadCSV(filename, content) {
   // It works on all HTML5 Ready browsers as it uses the download attribute of the <a> element:
   const element = document.createElement('a');
-   
+  
   //A blob is a data type that can store binary data
   // "type" is a MIME type
   // It can have a different value, based on a file you want to save
@@ -81,3 +103,4 @@ theDiv.innerHTML="";
   }
 });
 });
+
