@@ -20,9 +20,9 @@ async function Send(prompt) { // Send prompt to Google Gemini API
         const data = await res.json();
         const s = (data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) || 'Brak odpowiedzi';
 
-        $('#mssg').append("<div class='direct-chat-msg'><div class='direct-chat-infos clearfix'><span class='direct-chat-name float-left'>Synthia</span><span class='direct-chat-timestamp float-right'><a href='#' vall='" + s.replace(/'/g, "&#39;") + "' class='text-primary play'><i class='fas fa-play-circle'></i></a></span></div><img class='direct-chat-img' src='img/neo.jpg' alt='Message User Image'><div class='direct-chat-text'>" + s + "</div> </div>");
+        $('#mssg').append("<div class='direct-chat-msg'><div class='direct-chat-infos clearfix'><span class='direct-chat-name float-left'>Bocik</span><span class='direct-chat-timestamp float-right'><a href='#' vall='" + s.replace(/'/g, "&#39;") + "' class='text-primary play'><i class='fas fa-play-circle'></i></a></span></div><img class='direct-chat-img' src='img/neo.jpg' alt='Message User Image'><div class='direct-chat-text'>" + s + "</div> </div>");
         if (typeof SpeakIfEnabled === 'function') { SpeakIfEnabled(s); }
-        $('#Ask').html("Ask");
+        $('#Ask').html("Wyślij");
         $('#Ask').prop('disabled', false);
         // Scroll to the answer
         $('#mssg').stop().animate({ scrollTop: $('#mssg')[0].scrollHeight }, 800);
@@ -33,8 +33,8 @@ async function Send(prompt) { // Send prompt to Google Gemini API
     } catch (err) {
         console.error(err);
         const s = 'Error: ' + (err && err.message ? err.message : 'Unexpected error');
-        $('#mssg').append("<div class='direct-chat-msg'><div class='direct-chat-infos clearfix'><span class='direct-chat-name float-left'>Synthia</span></div><img class='direct-chat-img' src='img/neo.jpg' alt='Message User Image'><div class='direct-chat-text text-danger'>" + s + "</div> </div>");
-        $('#Ask').html("Ask");
+        $('#mssg').append("<div class='direct-chat-msg'><div class='direct-chat-infos clearfix'><span class='direct-chat-name float-left'>Bocik</span></div><img class='direct-chat-img' src='img/neo.jpg' alt='Message User Image'><div class='direct-chat-text text-danger'>" + s + "</div> </div>");
+        $('#Ask').html("Wyślij");
         $('#Ask').prop('disabled', false);
         $('#mssg').stop().animate({ scrollTop: $('#mssg')[0].scrollHeight }, 800);
     }

@@ -2,7 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title> Your Assistant Synthia | Gemini AI</title>
+    <title>Bocik | Gemini AI</title>
     <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="img/Favicon.png" sizes="128x128">
@@ -38,8 +38,8 @@
 <nav class="main-header navbar navbar-expand-md navbar-dark">
 <div class="container">
 <a href="#" class="navbar-brand">
-<img src="img/neo.jpg" alt="AdminLTE Logo" class="brand-image img-circle elevation-2" style="opacity: .8">
-<span class="brand-text font-weight-light">Synthia AI</span>
+<img src="img/neo.jpg" alt="Logo" class="brand-image img-circle elevation-2" style="opacity: .8">
+<span class="brand-text font-weight-light">Bocik</span>
 </a>
 <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 <span class="navbar-toggler-icon"></span>
@@ -48,15 +48,20 @@
 
 <ul class="navbar-nav">
 <li class="nav-item">
-<a href="index.html" class="nav-link">Chat</a>
+<a href="index.html" class="nav-link">Czat</a>
 </li>
 <li class="nav-item">
-<a href="code.html" class="nav-link">AI Coding</a>
+<a href="code.html" class="nav-link">AI Kod</a>
 </li>
 <li class="nav-item">
-<a href="text2voice.html" class="nav-link">AI Text 2 Voice</a>
+<a href="text2voice.html" class="nav-link">Tekst → Głos</a>
 </li>
 </ul>
+  <ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+      <a href="#" class="nav-link" id="voiceToggle"><i class="fas fa-volume-up"></i> Głos: <span id="voiceStatus">Wył.</span></a>
+    </li>
+  </ul>
 </div>
 </div>
 </nav>
@@ -67,7 +72,7 @@
       <div class="container">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>I am your AI Assistant Synthia </h1>
+            <h1>Bocik – Twój asystent AI</h1>
           </div>
           <div class="col-sm-6">
             
@@ -82,27 +87,31 @@
           <div class="col-md-4">
            <div class="card card-warning card-outline">
               <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-cog"></i> Settings</h3>
+                <h3 class="card-title"><i class="fas fa-cog"></i> Ustawienia</h3>
               </div>
                <div class="card-body">
                <div class="alert alert-info alert-dismissible">
                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
              
-                 Ask Synthia anything. Uses Google Gemini (latest API) for responses.
+                 Zapytaj Bocika o cokolwiek. Używa Google Gemini.
                 </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Language <i  data-toggle="tooltip" data-placement="top" title="Language you want your blog" class="fas fa-question-circle"></i><span class="form-required">*</span></label>
+                    <label for="selLang">Język odpowiedzi <i data-toggle="tooltip" data-placement="top" title="Główny język odpowiedzi" class="fas fa-question-circle"></i><span class="form-required">*</span></label>
                  <select id="selLang" class="form-control">
+                    <option value="Polish" selected>Polski</option>
                     <option value="English">English</option>
-                    <option value="French">French</option><option value="German">German</option><option value="Spanish">Spanish</option><option value="Portuguese">Portuguese</option><option value="Italian">Italian</option><option value="Dutch">Dutch</option><option value="Turkish">Turkish</option><option value="Arabic">Arabic</option><option value="Persian">Persian</option><option value="Chinese">Chinese</option><option value="Japanese">Japanese</option><option value="Korean">Korean</option><option value="Thai">Thai</option><option value="Malay">Malay</option><option value="Vietnamese">Vietnamese</option><option value="Hindi">Hindi</option><option value="Bengali">Bengali</option><option value="Telugu">Telugu</option><option value="Tamil">Tamil</option></select>
+                    <option value="Deutsch">Deutsch</option>
+                    <option value="Español">Español</option>
+                 </select>
                      </div>
               
                    <div class="form-group">
-                    <label for="exampleInputEmail1">Tone of Reply<span class="form-required">*</span>  <i  data-toggle="tooltip" data-placement="right" title="Tone of reply" class="fas fa-question-circle"></i></label>
-               <select id="selTone" class="form-control">
-                <option value="Professional">Professional</option>
-                   <option value="Humorous">Humorous</option>
-                   <option value="Conversational">Conversational </option>
+                    <label for="selStyle">Styl odpowiedzi<span class="form-required">*</span>  <i  data-toggle="tooltip" data-placement="right" title="Preferowany styl odpowiedzi" class="fas fa-question-circle"></i></label>
+               <select id="selStyle" class="form-control">
+                <option value="Neutralny" selected>Neutralny</option>
+                <option value="Zwięzły">Zwięzły</option>
+                <option value="Przyjazny">Przyjazny</option>
+                <option value="Formalny">Formalny</option>
                     <option value="Casual">Casual</option>
                    <option value="Witty">Witty</option>
                    <option value="Sarcastic">Sarcastic</option>
@@ -133,7 +142,7 @@
            
            <div class="card card-warning card-outline direct-chat direct-chat-info">
               <div class="card-header">
-                <h3 class="card-title" id="name"><i class="fas fa-robot"></i> Synthia AI</h3>
+                <h3 class="card-title" id="name"><i class="fas fa-robot"></i> Bocik</h3>
 
                 <div class="card-tools">
                   <span title="" id="posi" class="badge bg-dark">Gemini AI</span>
@@ -144,7 +153,7 @@
               <div class="card-body">
                 <!-- Conversations are loaded here -->
                 <div id="mssg" class="direct-chat-messages">
-                        <div class='direct-chat-msg'><div class='direct-chat-infos clearfix'><span class='direct-chat-name float-left'>Synthia</span><span class='direct-chat-timestamp float-right'><a href="#" vall="Hi;  I am Synthia. How can I assist you today? " class="text-primary play"><i class="fas fa-play-circle"></i></a> </span></div><img class='direct-chat-img' src='img/neo.jpg' alt='Message User Image'><div class='direct-chat-text'>Hi; I am Synthia. How can i assist you today?  </div> </div>   
+                        <div class='direct-chat-msg'><div class='direct-chat-infos clearfix'><span class='direct-chat-name float-left'>Bocik</span><span class='direct-chat-timestamp float-right'><a href="#" vall="Cześć! Jestem Bocik. Jak mogę pomóc?" class="text-primary play"><i class="fas fa-play-circle"></i></a> </span></div><img class='direct-chat-img' src='img/neo.jpg' alt='Message User Image'><div class='direct-chat-text'>Cześć! Jestem Bocik. Jak mogę pomóc?</div> </div>
                 </div>
                 <!--/.direct-chat-messages-->
                 <span class="character-typing">
@@ -158,10 +167,10 @@
                 <input id="hdn_prompt" type="hidden" />
                 <input id="hdn_usr" type="hidden" />
                   <div class="input-group">
-                  <textarea id="txtMsg" rows="1"  name="message" required  style="overflow:hidden;resize:none" placeholder="Type Message ..." class="form-control" ></textarea>
+                  <textarea id="txtMsg" rows="1"  name="message" required  style="overflow:hidden;resize:none" placeholder="Napisz wiadomość..." class="form-control" ></textarea>
                    
                     <span class="input-group-append">
-                      <button type="button" onclick="createPrompt()" id="Ask" class="btn btn-dark">Ask</button>
+                      <button type="button" onclick="createPrompt()" id="Ask" class="btn btn-dark">Wyślij</button>
                     </span>
                   </div>
                 </form>
@@ -190,8 +199,8 @@
 <script>
 function createPrompt()
 {
-
- var uMsg = $('#txtMsg').val() + ". Reply in " + $('#selLang').val() + ". Tone of reply should be  " + $('#selTone').val();
+ var base = $('#txtMsg').val();
+ var uMsg = base + "\nOdpowiadaj w " + $('#selLang').val() + ". Styl odpowiedzi: " + $('#selStyle').val() + ".";
 if (!$('#frm')[0].checkValidity()) {
     $('#frm')[0].reportValidity();
 }
@@ -221,6 +230,12 @@ $(window).on('keydown', function (e) {
 //New UI controls
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
+    // Voice toggle in navbar
+    $('#voiceToggle').on('click', function(e){
+        e.preventDefault();
+        window.voiceEnabled = !window.voiceEnabled;
+        $('#voiceStatus').text(window.voiceEnabled ? 'Wł.' : 'Wył.');
+    });
 });
 //Text area resize
 var textarea = document.getElementById("txtMsg");

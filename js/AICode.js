@@ -95,7 +95,7 @@ theDiv.innerHTML="";
 });
  $('#export').click(function(){
  var cnt=$("#cod").text();
- downloadFile("Synthiacode.txt",cnt);
+ downloadFile("BocikCode.txt",cnt);
  });
 });
 function copyText(){
@@ -132,4 +132,3 @@ function copyText(){
   //The removeChild() method of the Node interface removes a child node from the DOM and returns the removed node
   document.body.removeChild(element);
 };
-
