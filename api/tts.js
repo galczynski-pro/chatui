@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       return;
     }
     // Allow using a Google API key (passed via header or env) OR service account.
-    const googleApiKey = req.headers['x-google-api-key'] || process.env.GOOGLE_TTS_API_KEY;
+    const googleApiKey = req.headers['x-google-api-key'] || process.env.GOOGLE_API_KEY || process.env.GOOGLE_TTS_API_KEY;
     let ttsRes;
     if (googleApiKey) {
       // Use API key auth (no OAuth flow)
