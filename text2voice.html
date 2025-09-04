@@ -97,12 +97,12 @@
           <div class="col-md-10">
            <div class="card card-warning card-outline">
               <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-volume-up"></i> Generate AI Voiceover</h3>
+                <h3 class="card-title"><i class="fas fa-volume-up"></i> Głos lektorski (Google Cloud)</h3>
               </div>
                <div class="card-body">
                <div class="alert alert-info alert-dismissible">
                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                Synthia speaks your text locally using the browser speech engine (no upload).
+                Bocik generuje głos w Google Cloud Text-to-Speech (męski, niski, poważny). Otrzymasz plik MP3 do pobrania.
                 </div>
                <form id="frm">
                      <div class="form-group">
@@ -114,7 +114,7 @@
                <div class="card-footer">
                  <div class="alert alert-danger" id="error" style="display:none" >
                </div>
-               <button type="button" class="btn btn-info" id="Ask" onclick="createPrompt()" >Generate&nbsp;<i class="far fa-paper-plane"></i></button>
+               <button type="button" class="btn btn-info" id="Ask" onclick="createPrompt()" >Generuj&nbsp;<i class="far fa-paper-plane"></i></button>
                <a class="btn btn-success"  id="down" style="display:none" target="_blank" href="" download>Download&nbsp;<i class="fas fa-file-download"></i></a>
                     </div>
          
@@ -143,7 +143,7 @@ if (!$('#frm')[0].checkValidity()) {
 }
 else {
     // $('.message-input input').val(null);
-    $('#Ask').html("Generate <i class='fas fa-circle-notch fa-spin'></i>");
+    $('#Ask').html("Generuj <i class='fas fa-circle-notch fa-spin'></i>");
     $('#Ask').prop('disabled', true);
     Send(uMsg);
 }

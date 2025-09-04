@@ -95,7 +95,7 @@
           <div class="col-md-4">
            <div class="card card-warning card-outline">
               <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-code"></i> Your Prompt</h3>
+                <h3 class="card-title"><i class="fas fa-code"></i> Zadanie</h3>
               </div>
                <div class="card-body">
                <div class="alert alert-info alert-dismissible">
@@ -105,8 +105,8 @@
     
                <form id="frm">
                    <div class="form-group">
-                    <label for="exampleInputEmail1">Coding Language<span class="form-required">*</span>  <i  data-toggle="tooltip" data-placement="right" title="Coding Language" class="fas fa-question-circle"></i></label>
-               <select id="selTone" class="form-control">
+                    <label for="selLangCode">Język programowania<span class="form-required">*</span>  <i  data-toggle="tooltip" data-placement="right" title="Docelowy język kodu" class="fas fa-question-circle"></i></label>
+               <select id="selLangCode" class="form-control">
                 <option value="python">Python</option>
                    <option value="javaScript">JavaScript</option>
                    <option value="php">PHP</option>
@@ -127,16 +127,35 @@
                     <option value="html">HTML</option>
    </select>
               </div>
+              <div class="form-group">
+                <label for="selMode">Tryb<span class="form-required">*</span> <i data-toggle="tooltip" title="Co chcesz zrobić" class="fas fa-question-circle"></i></label>
+                <select id="selMode" class="form-control">
+                  <option value="generate" selected>Generuj kod</option>
+                  <option value="explain">Wyjaśnij kod</option>
+                  <option value="to_sql">Konwersja do SQL</option>
+                  <option value="optimize">Optymalizuj kod</option>
+                  <option value="tests">Dodaj testy jednostkowe</option>
+                </select>
+              </div>
+              <div class="form-group" id="dbGroup" style="display:none;">
+                <label for="selDB">Baza danych</label>
+                <select id="selDB" class="form-control">
+                  <option>PostgreSQL</option>
+                  <option>MySQL</option>
+                  <option>SQLite</option>
+                  <option>SQL Server</option>
+                </select>
+              </div>
                       <div class="form-group">
-                    <label for="exampleInputEmail1">Describe your requirement<span class="form-required">*</span>  <i  data-toggle="tooltip" data-placement="right" title="Please be descriptive so Gemini can deliver it correctly" class="fas fa-question-circle"></i></label>
-                     <textarea id="txtDes" rows="4" class="form-control" placeholder="Write a Javascript Code to Join Two Strings" required=required></textarea>
+                    <label for="txtDes">Opis zadania<span class="form-required">*</span>  <i  data-toggle="tooltip" data-placement="right" title="Opisz dokładnie czego potrzebujesz" class="fas fa-question-circle"></i></label>
+                     <textarea id="txtDes" rows="4" class="form-control" placeholder="Napisz skrypt JS łączący dwa stringi" required=required></textarea>
                     </div>        
                       </form>
                   </div>
                <div class="card-footer">
                  <div class="alert alert-danger" id="error" style="display:none" >
                </div>
-               <button type="button" class="btn btn-info btn-block" id="Ask" onclick="createPrompt()" >Generate  <i class="far fa-paper-plane"></i></button>
+               <button type="button" class="btn btn-info btn-block" id="Ask" onclick="createPrompt()" >Generuj  <i class="far fa-paper-plane"></i></button>
                     </div>
          
               </div>
@@ -158,7 +177,7 @@
                 <!-- Conversations are loaded here -->
               <pre>
               <code id="cod" class="language-python">
-              Your Generated Code will be shown here
+              Wygenerowany kod pojawi się tutaj
                </code>
               </pre>
                 <!--/.direct-chat-messages-->
@@ -170,8 +189,8 @@
               <!-- /.card-body --> 
               <div class="card-footer">
                
-                <button type="submit" data-toggle="tooltip" data-placement="bottom" title="" id="export" class="btn btn-lg btn-dark" data-original-title="Export Code as Text"><i class="fas fa-file-download"></i></button>
-                <button type="submit" data-toggle="tooltip" data-placement="bottom" title="" id="copy" onclick="copyText()" class="btn btn-lg btn-dark" data-original-title="Copy to Clipboard"><i class="fas fa-copy"></i></button>
+                <button type="submit" data-toggle="tooltip" data-placement="bottom" title="" id="export" class="btn btn-lg btn-dark" data-original-title="Zapisz jako tekst"><i class="fas fa-file-download"></i></button>
+                <button type="submit" data-toggle="tooltip" data-placement="bottom" title="" id="copy" onclick="copyText()" class="btn btn-lg btn-dark" data-original-title="Kopiuj do schowka"><i class="fas fa-copy"></i></button>
                    <span class="msgg">
                   <div>Copied! </div>
                 </span>     
@@ -198,15 +217,31 @@
 <script>
 function createPrompt()
 {
-
-    var uMsg = "Write a full " + $('#selTone').val() + " code for " + $('#txtDes').val();
+    var mode = $('#selMode').val();
+    var lang = $('#selLangCode').val();
+    var db = $('#selDB').val();
+    var desc = $('#txtDes').val();
+    var uMsg = '';
+    if (mode === 'generate') {
+        uMsg = 'Napisz kompletny kod w ' + lang + ' dla zadania: ' + desc + '. Dodaj krótkie wyjaśnienia, jeśli potrzebne.';
+    } else if (mode === 'explain') {
+        uMsg = 'Wyjaśnij krok po kroku poniższy kod/opis w ' + lang + ': ' + desc + '. Podaj kontekst i przykłady.';
+    } else if (mode === 'to_sql') {
+        uMsg = 'Przekształć poniższy opis/dane do ' + db + ' SQL. Podaj: schemat (CREATE TABLE), przykładowe INSERT oraz przykładowe zapytania SELECT. Wejście: ' + desc + '.';
+    } else if (mode === 'optimize') {
+        uMsg = 'Zoptymalizuj kod (' + lang + ') pod kątem wydajności i czytelności. Wyjaśnij zmiany. Wejście: ' + desc + '.';
+    } else if (mode === 'tests') {
+        uMsg = 'Napisz testy jednostkowe w ' + lang + ' (preferowany popularny framework) dla: ' + desc + '. Dodaj instrukcje uruchomienia.';
+    } else {
+        uMsg = desc;
+    }
 if (!$('#frm')[0].checkValidity()) {
     $('#frm')[0].reportValidity();
 }
 else {
     
     // $('.message-input input').val(null);
-    $('#Ask').html("Generate <i class='fas fa-circle-notch fa-spin'></i>");
+    $('#Ask').html("Generuj <i class='fas fa-circle-notch fa-spin'></i>");
     $('#Ask').prop('disabled', true);
     Send(uMsg);
 }
@@ -220,6 +255,9 @@ $(window).on('keydown', function (e) {
 //New UI controls
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
+    $('#selMode').on('change', function(){
+        if ($(this).val() === 'to_sql') { $('#dbGroup').show(); } else { $('#dbGroup').hide(); }
+    });
 });
     </script>
 </body>
