@@ -1,1 +1,1 @@
-﻿var API_Key = decrypt("Replace with your API code", "Code canyon purchase code"); //Replace with key generated at http://52.15.181.225/GPT/Encrypt.html with API Key and code canyon purchase code.
+﻿var API_Key = 'AIzaSyCyhv4xQ9q24cwXronauhDyycPG3SteOII';
